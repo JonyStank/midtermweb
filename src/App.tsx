@@ -7,6 +7,7 @@ import About from './components/About'
 import Profile from './components/Profile'
 import Game from './components/Game'
 import Footer from './components/Footer'
+import ThemeSwitcher from './components/ThemeSwitcher'
 
 function HomePage() {
   return (
@@ -42,6 +43,7 @@ function App() {
         </AnimatePresence>
       </main>
       <Footer />
+      <ThemeSwitcher />
     </>
   )
 }

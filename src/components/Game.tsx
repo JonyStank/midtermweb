@@ -58,12 +58,30 @@ export default function Game() {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
+    // Read theme colors from CSS variables
+    const style = getComputedStyle(document.documentElement)
+    const primaryColor = style.getPropertyValue('--accent-primary').trim() || '#6c63ff'
+    const secondaryColor = style.getPropertyValue('--accent-secondary').trim() || '#00d4ff'
+    const tertiaryColor = style.getPropertyValue('--accent-tertiary').trim() || '#ff6b9d'
+
+    // Parse hex to RGB helper
+    const hexToRgb = (hex: string) => {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+      return result
+        ? { r: parseInt(result[1], 16), g: parseInt(result[2], 16), b: parseInt(result[3], 16) }
+        : { r: 108, g: 99, b: 255 }
+    }
+
+    const primary = hexToRgb(primaryColor)
+    const secondary = hexToRgb(secondaryColor)
+    const food_color = tertiaryColor
+
     // Clear
     ctx.fillStyle = '#0d0d24'
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
 
     // Grid lines (very subtle)
-    ctx.strokeStyle = 'rgba(108, 99, 255, 0.05)'
+    ctx.strokeStyle = `rgba(${primary.r}, ${primary.g}, ${primary.b}, 0.05)`
     ctx.lineWidth = 0.5
     for (let x = 0; x <= BOARD_WIDTH; x++) {
       ctx.beginPath()
@@ -88,7 +106,7 @@ export default function Game() {
       food.y * CELL_SIZE + CELL_SIZE / 2,
       CELL_SIZE
     )
-    glow.addColorStop(0, '#ff6b9d')
+    glow.addColorStop(0, food_color)
     glow.addColorStop(1, 'rgba(255, 107, 157, 0)')
     ctx.fillStyle = glow
     ctx.fillRect(
@@ -97,7 +115,7 @@ export default function Game() {
       CELL_SIZE * 2,
       CELL_SIZE * 2
     )
-    ctx.fillStyle = '#ff6b9d'
+    ctx.fillStyle = food_color
     ctx.beginPath()
     ctx.roundRect(
       food.x * CELL_SIZE + 2,
@@ -114,10 +132,10 @@ export default function Game() {
       const isHead = i === 0
       const progress = i / snake.length
 
-      // Gradient from primary to secondary
-      const r = Math.round(108 + (0 - 108) * progress)
-      const g = Math.round(99 + (212 - 99) * progress)
-      const b = Math.round(255 + (255 - 255) * progress)
+      // Gradient from primary to secondary (theme-aware)
+      const r = Math.round(primary.r + (secondary.r - primary.r) * progress)
+      const g = Math.round(primary.g + (secondary.g - primary.g) * progress)
+      const b = Math.round(primary.b + (secondary.b - primary.b) * progress)
 
       ctx.fillStyle = `rgb(${r}, ${g}, ${b})`
 
@@ -131,8 +149,8 @@ export default function Game() {
           segment.y * CELL_SIZE + CELL_SIZE / 2,
           CELL_SIZE * 1.5
         )
-        headGlow.addColorStop(0, 'rgba(108, 99, 255, 0.3)')
-        headGlow.addColorStop(1, 'rgba(108, 99, 255, 0)')
+        headGlow.addColorStop(0, `rgba(${primary.r}, ${primary.g}, ${primary.b}, 0.3)`)
+        headGlow.addColorStop(1, `rgba(${primary.r}, ${primary.g}, ${primary.b}, 0)`)
         ctx.fillStyle = headGlow
         ctx.fillRect(
           segment.x * CELL_SIZE - CELL_SIZE,
@@ -140,7 +158,7 @@ export default function Game() {
           CELL_SIZE * 3,
           CELL_SIZE * 3
         )
-        ctx.fillStyle = '#6c63ff'
+        ctx.fillStyle = primaryColor
       }
 
       ctx.beginPath()
