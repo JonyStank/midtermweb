@@ -8,9 +8,9 @@ const skills = [
 
 const experiences = [
   {
-    date: '2024 — Present',
+    date: '2023 — Present',
     title: 'Computer Science Student',
-    desc: 'Studying software engineering, algorithms, and web development at university.',
+    desc: 'Studying computer science at university, focusing on software engineering, algorithms, and web development.',
   },
   {
     date: '2023',
@@ -65,8 +65,8 @@ export default function Profile() {
           <div className="profile-avatar">
             <div className="profile-avatar-inner">👨‍💻</div>
           </div>
-          <h3 className="profile-name">Alex Chen</h3>
-          <p className="profile-role">Full-Stack Developer</p>
+          <h3 className="profile-name">陳家盛</h3>
+          <p className="profile-role">Student ID: 111210554</p>
           <p className="profile-bio">
             Computer Science student passionate about building modern web apps, 
             exploring new technologies, and solving complex problems with elegant code.
